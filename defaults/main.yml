@@ -1,0 +1,7 @@
+---
+# defaults file for MicroJoe.gogs
+
+gogs_group: git
+gogs_user: git
+
+gogs_base: "/home/{{ gogs_user }}/gogs"

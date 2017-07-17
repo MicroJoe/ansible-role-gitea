@@ -1,0 +1,19 @@
+---
+# tasks file for MicroJoe.gogs
+
+- name: Ensure group exists
+  user:
+    name: "{{ gogs_group }}"
+
+- name: Ensure user exists
+  user:
+    name: "{{ gogs_user }}"
+    group: "{{ gogs_group }}"
+
+- name: Download gogs binary
+  become: yes
+  become_user: "{{ gogs_user }}"
+  get_url:
+    url: https://cdn.gogs.io/0.11.19/linux_amd64.tar.gz
+    dest: "{{ gogs_base }}"
+    checksum: sha256:ae6c81a7e00a5bc96f9f165c234f8ea156f4ef4735a55ba279187786157ddf1a
