@@ -29,8 +29,11 @@
   become: yes
   become_user: "{{ gogs_user }}"
   unarchive:
+    remote_src: yes
     src: "{{ gogs_home }}/gogs-{{ gogs_version }}.tar.gz"
     dest: "{{ gogs_base }}"
+    extra_opts: ["--strip-components=1"]
+
 
   #- name: Install systemd update service
   #  template:

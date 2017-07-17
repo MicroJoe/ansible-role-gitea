@@ -5,5 +5,5 @@ gogs_group: git
 gogs_user: git
 
 gogs_version: 0.11.19
-gogs_home: "/home/{{ gogs_user }}/gogs"
+gogs_home: "/home/{{ gogs_user }}"
 gogs_base: "{{ gogs_home }}/gogs"
