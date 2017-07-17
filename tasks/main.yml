@@ -10,10 +10,37 @@
     name: "{{ gogs_user }}"
     group: "{{ gogs_group }}"
 
-- name: Download gogs binary
+- name: Download gogs
   become: yes
   become_user: "{{ gogs_user }}"
   get_url:
-    url: https://cdn.gogs.io/0.11.19/linux_amd64.tar.gz
-    dest: "{{ gogs_base }}"
+    url: "https://cdn.gogs.io/{{ gogs_version }}/linux_amd64.tar.gz"
+    dest: "{{ gogs_home }}/gogs-{{ gogs_version }}.tar.gz"
     checksum: sha256:ae6c81a7e00a5bc96f9f165c234f8ea156f4ef4735a55ba279187786157ddf1a
+
+- name: Create directory for archive extraction
+  become: yes
+  become_user: "{{ gogs_user }}"
+  file:
+    path: "{{ gogs_base }}"
+    state: directory
+
+- name: Extract gogs
+  become: yes
+  become_user: "{{ gogs_user }}"
+  unarchive:
+    src: "{{ gogs_home }}/gogs-{{ gogs_version }}.tar.gz"
+    dest: "{{ gogs_base }}"
+
+  #- name: Install systemd update service
+  #  template:
+  #    src: "{{ gogs_
+  #    dest: /etc/systemd/system/ttrss-update.service
+  #    mode: 0664
+  #
+  #- name: Enable systemd update service
+  #  systemd:
+  #    name: ttrss-update
+  #    state: started
+  #    enabled: yes
+  #    daemon_reload: yes
