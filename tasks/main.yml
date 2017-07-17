@@ -52,15 +52,18 @@
     encoding: UTF-8
     template: template0
 
-  #- name: Install systemd update service
-  #  template:
-  #    src: "{{ gogs_
-  #    dest: /etc/systemd/system/ttrss-update.service
-  #    mode: 0664
-  #
-  #- name: Enable systemd update service
-  #  systemd:
-  #    name: ttrss-update
-  #    state: started
-  #    enabled: yes
-  #    daemon_reload: yes
+# Systemd service
+
+- name: Install systemd update service
+  copy:
+    remote_src: yes
+    src: "{{ gogs_base }}/scripts/systemd/gogs.service"
+    dest: /etc/systemd/system/gogs.service
+    mode: 0664
+
+- name: Enable systemd update service
+  systemd:
+    name: gogs
+    state: started
+    enabled: yes
+    daemon_reload: yes
