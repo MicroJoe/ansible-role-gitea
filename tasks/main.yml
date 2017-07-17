@@ -34,6 +34,23 @@
     dest: "{{ gogs_base }}"
     extra_opts: ["--strip-components=1"]
 
+# PostgreSQL commands
+
+- name: Create postgresql user
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name: "{{ gogs_db_user }}"
+    password: "{{ gogs_db_password }}"
+
+- name: Create postgresql database
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    name: "{{ gogs_db_name }}"
+    owner: "{{ gogs_db_user }}"
+    encoding: UTF-8
+    template: template0
 
   #- name: Install systemd update service
   #  template:

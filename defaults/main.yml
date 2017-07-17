@@ -7,3 +7,7 @@ gogs_user: git
 gogs_version: 0.11.19
 gogs_home: "/home/{{ gogs_user }}"
 gogs_base: "{{ gogs_home }}/gogs"
+
+gogs_db_user: gogs
+gogs_db_password: gogs
+gogs_db_name: gogs
