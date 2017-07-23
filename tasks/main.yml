@@ -1,38 +1,45 @@
 ---
-# tasks file for MicroJoe.gogs
+# tasks file for MicroJoe.gitea
 
 - name: Ensure group exists
   user:
-    name: "{{ gogs_group }}"
+    name: "{{ gitea_group }}"
 
 - name: Ensure user exists
   user:
-    name: "{{ gogs_user }}"
-    group: "{{ gogs_group }}"
+    name: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
 
-- name: Download gogs
+- name: Download gitea source tree
   become: yes
-  become_user: "{{ gogs_user }}"
+  become_user: "{{ gitea_user }}"
   get_url:
-    url: "https://cdn.gogs.io/{{ gogs_version }}/linux_amd64.tar.gz"
-    dest: "{{ gogs_home }}/gogs-{{ gogs_version }}.tar.gz"
-    checksum: sha256:ae6c81a7e00a5bc96f9f165c234f8ea156f4ef4735a55ba279187786157ddf1a
+    url: "https://github.com/go-gitea/gitea/archive/v{{ gitea_version }}.tar.gz"
+    dest: "{{ gitea_home }}/gitea-{{ gitea_version }}.tar.gz"
 
 - name: Create directory for archive extraction
   become: yes
-  become_user: "{{ gogs_user }}"
+  become_user: "{{ gitea_user }}"
   file:
-    path: "{{ gogs_base }}"
+    path: "{{ gitea_base }}"
     state: directory
 
-- name: Extract gogs
+- name: Extract gitea
   become: yes
-  become_user: "{{ gogs_user }}"
+  become_user: "{{ gitea_user }}"
   unarchive:
     remote_src: yes
-    src: "{{ gogs_home }}/gogs-{{ gogs_version }}.tar.gz"
-    dest: "{{ gogs_base }}"
+    src: "{{ gitea_home }}/gitea-{{ gitea_version }}.tar.gz"
+    dest: "{{ gitea_base }}"
     extra_opts: ["--strip-components=1"]
+
+- name: Download gitea binary
+  become: yes
+  become_user: "{{ gitea_user }}"
+  get_url:
+    url: "https://github.com/go-gitea/gitea/releases/download/v{{ gitea_version }}/gitea-{{ gitea_version }}-linux-amd64"
+    dest: "{{ gitea_base }}/gitea"
+    mode: 0755
 
 # PostgreSQL commands
 
@@ -40,30 +47,29 @@
   become: yes
   become_user: postgres
   postgresql_user:
-    name: "{{ gogs_db_user }}"
-    password: "{{ gogs_db_password }}"
+    name: "{{ gitea_db_user }}"
+    password: "{{ gitea_db_password }}"
 
 - name: Create postgresql database
   become: yes
   become_user: postgres
   postgresql_db:
-    name: "{{ gogs_db_name }}"
-    owner: "{{ gogs_db_user }}"
+    name: "{{ gitea_db_name }}"
+    owner: "{{ gitea_db_user }}"
     encoding: UTF-8
     template: template0
 
 # Systemd service
 
 - name: Install systemd update service
-  copy:
-    remote_src: yes
-    src: "{{ gogs_base }}/scripts/systemd/gogs.service"
-    dest: /etc/systemd/system/gogs.service
+  template:
+    src: templates/gitea.service.j2
+    dest: /etc/systemd/system/gitea.service
     mode: 0664
 
 - name: Enable systemd update service
   systemd:
-    name: gogs
+    name: gitea
     state: started
     enabled: yes
     daemon_reload: yes

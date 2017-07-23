@@ -1,13 +1,13 @@
 ---
-# defaults file for MicroJoe.gogs
+# defaults file for MicroJoe.gitea
 
-gogs_group: git
-gogs_user: git
+gitea_group: git
+gitea_user: git
 
-gogs_version: 0.11.19
-gogs_home: "/home/{{ gogs_user }}"
-gogs_base: "{{ gogs_home }}/gogs"
+gitea_version: 1.1.2
+gitea_home: "/home/{{ gitea_user }}"
+gitea_base: "{{ gitea_home }}/gitea"
 
-gogs_db_user: gogs
-gogs_db_password: gogs
-gogs_db_name: gogs
+gitea_db_user: gitea
+gitea_db_password: gitea
+gitea_db_name: gitea
