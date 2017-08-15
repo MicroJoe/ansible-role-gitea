@@ -61,13 +61,13 @@
 
 # Systemd service
 
-- name: Install systemd update service
+- name: Install systemd service
   template:
     src: templates/gitea.service.j2
     dest: /etc/systemd/system/gitea.service
     mode: 0664
 
-- name: Enable systemd update service
+- name: Enable systemd service
   systemd:
     name: gitea
     state: started
